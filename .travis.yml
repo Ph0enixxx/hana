@@ -291,6 +291,17 @@ install:
 
 before_script:
   ############################################################################
+  # When running with Boost.Build, put Hana in the Boost tree and make that
+  # the root of the project
+  ############################################################################
+  - |
+    if [[ "${BOOST_BUILD}" == "true" ]]; then
+      rm -rf "${BOOST_DIR}/libs/hana"
+      mv "${TRAVIS_BUILD_DIR}" "${BOOST_DIR}/libs/hana"
+      export TRAVIS_BUILD_DIR="${BOOST_DIR}/libs/hana"
+    fi
+
+  ############################################################################
   # Set the git identity (for pushing the documentation and the benchmarks)
   ############################################################################
   - git config --global user.name "Travis bot"
@@ -299,7 +310,7 @@ before_script:
   ############################################################################
   # Go back to the root of the project and setup the build directory
   ############################################################################
-  - cd ${TRAVIS_BUILD_DIR}
+  - cd "${TRAVIS_BUILD_DIR}"
   - (mkdir build && cd build && cmake .. ${CMAKE_OPTIONS})
 
 
@@ -347,7 +358,6 @@ script:
 
   - |
     if [[ "${DOCUMENTATION}" == "true" && "${BOOST_BUILD}" == "true" ]]; then
-      touch Jamroot
       (cd doc && b2)
       if [[ ! -d doc/html ]]; then exit 1; fi
     fi
@@ -402,7 +412,6 @@ script:
 
   - |
     if [[ "${UNIT_TESTS}" == "true" && "${BOOST_BUILD}" == "true" ]]; then
-      touch Jamroot
       echo "using clang : : ${CXX} ;" > project-config.jam
       if [[ "${LDFLAGS}" == "" ]]; then
         (cd test && b2 toolset=clang cxxflags="-std=c++1y ${CXXFLAGS}" include="${BOOST_DIR}")
