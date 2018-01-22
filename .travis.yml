@@ -43,98 +43,10 @@ matrix:
     # Note that we only use the memory checker on the main configuration to
     # speed up Travis builds.
     ##########################################################################
-    # Clang 3.5
-    - env: UNIT_TESTS=true COMPILER=clang++-3.5 BOOST_VERSION=default ENABLE_MEMCHECK=true
-      addons: { apt: { packages: ["clang-3.5", "valgrind"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.5"] } }
-
-    # Clang 3.6
-    - env: UNIT_TESTS=true COMPILER=clang++-3.6 BOOST_VERSION=default ENABLE_MEMCHECK=true
-      addons: { apt: { packages: ["clang-3.6", "valgrind"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.6"] } }
-
-    # Clang 3.7
-    - env: UNIT_TESTS=true COMPILER=clang++-3.7 BOOST_VERSION=default ENABLE_MEMCHECK=true
-      addons: { apt: { packages: ["clang-3.7", "valgrind"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.7"] } }
-
-    # Clang 3.8
-    - env: UNIT_TESTS=true COMPILER=clang++-3.8 BOOST_VERSION=default ENABLE_MEMCHECK=true
-      addons: { apt: { packages: ["clang-3.8", "valgrind"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.8"] } }
-
-    # Clang 3.9
-    - env: UNIT_TESTS=true COMPILER=clang++-3.9 BOOST_VERSION=default ENABLE_MEMCHECK=true
-      addons: { apt: { packages: ["clang-3.9", "valgrind"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.9"] } }
 
     # Clang 4.0
     - env: UNIT_TESTS=true COMPILER=clang++-4.0 BOOST_VERSION=default ENABLE_MEMCHECK=true
       addons: &defaults { apt: { packages: ["clang-4.0", "valgrind"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-4.0"] } }
-
-    # GCC 6
-    - env: UNIT_TESTS=true COMPILER=g++-6 BOOST_VERSION=default ENABLE_MEMCHECK=true
-      addons: { apt: { packages: ["g++-6", "valgrind"], sources: ["ubuntu-toolchain-r-test"] } }
-
-    # GCC 7
-    - env: UNIT_TESTS=true COMPILER=g++-7 BOOST_VERSION=default ENABLE_MEMCHECK=true
-      addons: { apt: { packages: ["g++-7", "valgrind"], sources: ["ubuntu-toolchain-r-test"] } }
-      dist: trusty
-
-    # Xcode 6.4
-    - os: osx
-      env: UNIT_TESTS=true BOOST_VERSION=default
-      osx_image: xcode6.4
-
-    # Xcode 7.3
-    - os: osx
-      env: UNIT_TESTS=true BOOST_VERSION=default
-      osx_image: xcode7.3
-
-    # Xcode 8.3
-    - os: osx
-      env: UNIT_TESTS=true BOOST_VERSION=default
-      osx_image: xcode8.3
-
-    # Xcode 9.1
-    - os: osx
-      env: UNIT_TESTS=true BOOST_VERSION=default
-      osx_image: xcode9.1
-
-    ##########################################################################
-    # Build with variations in the configuration
-    ##########################################################################
-    # With C++17 instead of C++14, on Clang
-    - env: UNIT_TESTS=true COMPILER=default BOOST_VERSION=default CMAKE_OPTIONS="-DBOOST_HANA_ENABLE_CPP17=ON"
-      addons: *defaults
-
-    # With C++17 instead of C++14, on GCC
-    - env: UNIT_TESTS=true COMPILER=g++-6     BOOST_VERSION=default CMAKE_OPTIONS="-DBOOST_HANA_ENABLE_CPP17=ON"
-      addons: { apt: { packages: ["g++-6", "valgrind"], sources: ["ubuntu-toolchain-r-test"] } }
-
-    # Without concept checks
-    - env: UNIT_TESTS=true COMPILER=default BOOST_VERSION=default CMAKE_OPTIONS="-DBOOST_HANA_ENABLE_CONCEPT_CHECKS=OFF"
-      addons: *defaults
-
-    # With debug mode
-    - env: UNIT_TESTS=true COMPILER=default BOOST_VERSION=default CMAKE_OPTIONS="-DBOOST_HANA_ENABLE_DEBUG_MODE=ON"
-      addons: *defaults
-
-    # Without exceptions
-    - env: UNIT_TESTS=true COMPILER=default BOOST_VERSION=default CMAKE_OPTIONS="-DBOOST_HANA_ENABLE_EXCEPTIONS=OFF"
-      addons: *defaults
-
-    # Without exceptions on OS X
-    - os: osx
-      env: UNIT_TESTS=true BOOST_VERSION=default CMAKE_OPTIONS="-DBOOST_HANA_ENABLE_EXCEPTIONS=OFF"
-      osx_image: xcode9.1
-
-    # With Boost 1.63
-    - env: UNIT_TESTS=true COMPILER=default BOOST_VERSION=1.63.0
-      addons: *defaults
-
-    # With Boost 1.64
-    - env: UNIT_TESTS=true COMPILER=default BOOST_VERSION=1.64.0
-      addons: *defaults
-
-    # Without Boost (make sure we don't depend on it)
-    - env: UNIT_TESTS=true COMPILER=default
-      addons: *defaults
 
     # With Boost.Build instead of CMake (on Linux)
     - env: UNIT_TESTS=true COMPILER=default BOOST_VERSION=default BOOST_BUILD=true
@@ -148,27 +60,8 @@ matrix:
     ##########################################################################
     # Generate the documentation
     ##########################################################################
-    - env: DOCUMENTATION=true COMPILER=default BOOST_VERSION=default
-      addons: *defaults
     - env: DOCUMENTATION=true COMPILER=default BOOST_VERSION=default BOOST_BUILD=true
       addons: *defaults
-
-    ##########################################################################
-    # Benchmarks
-    ##########################################################################
-    - env: BENCHMARKS=true COMPILER=default BOOST_VERSION=default CMAKE_OPTIONS="-DCMAKE_BUILD_TYPE=Release"
-      addons: *defaults
-
-    ##########################################################################
-    # Jobs that are allowed to fail
-    ##########################################################################
-    # Boost trunk
-    - env: UNIT_TESTS=true COMPILER=default BOOST_VERSION=trunk
-      addons: *defaults
-
-
-  allow_failures:
-    - env: UNIT_TESTS=true COMPILER=default BOOST_VERSION=trunk
 
 
 install:
